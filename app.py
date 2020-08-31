@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost:3306/first_flask?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://kibee:1234@localhost:3306/first_flask'
 db = SQLAlchemy(app)
 
 
@@ -26,7 +26,7 @@ class Tag(db.Model):
     message = db.relationship('Message', backref=db.backref('tags', lazy=True))
 
 
-# db.create_all()
+db.create_all()
 
 
 @app.route('/', methods=['GET'])
