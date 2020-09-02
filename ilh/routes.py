@@ -56,13 +56,13 @@ def register():
     password2 = request.form.get('password2')
 
     if request.method == 'POST':
-        if not (login or password2 or password):
+        if not (login or password or password2):
             flash('Please, fill all fields!')
         elif password != password2:
             flash('Password are not equal!')
         else:
             hash_pwd = generate_password_hash(password)
-            new_user = User(login=login, password=password)
+            new_user = User(login=login, password=hash_pwd)
             db.session.add(new_user)
             db.session.commit()
 

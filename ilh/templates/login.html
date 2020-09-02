@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Title</title>
 </head>
 <body>
-<H1>Login page</H1>
+<h1>Login page</h1>
 
 {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -17,27 +17,21 @@
     {% endif %}
 {% endwith %}
 
-<form method="get">
+<form method="POST">
     <table>
         <tr>
             <td>Login</td>
             <td><input type="text" name="login"></td>
         </tr>
-
         <tr>
             <td>Password</td>
-            <td><input type="text" name="password"></td>
+            <td><input type="password" name="password"></td>
         </tr>
-
         <tr>
             <td><a href="{{ url_for('register') }}">Register</a></td>
             <td><input type="submit" value="Login"></td>
         </tr>
-
-
     </table>
 </form>
-
 </body>
-
 </html>

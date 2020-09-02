@@ -27,6 +27,6 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
 
 
-# @manager.user_loader
+@manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
