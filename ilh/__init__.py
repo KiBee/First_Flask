@@ -9,7 +9,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://kibee:1234@localhost:3306/first
 db = SQLAlchemy(app)
 manager = LoginManager(app)
 
-
 from ilh import models, routes
 
 db.create_all()
