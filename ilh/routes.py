@@ -12,11 +12,13 @@ def hello_world():
 
 
 @app.route('/main', methods=['GET'])
+@login_required
 def main():
     return render_template('main.html', messages=Message.query.all())
 
 
 @app.route('/add_message', methods=['POST'])
+@login_required
 def add_message():
     text = request.form['text']
     tag = request.form['tag']
@@ -28,30 +30,56 @@ def add_message():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login_page():
     login = request.form.get('login')
     password = request.form.get('password')
 
     if login and password:
         user = User.query.filter_by(login=login).first()
-        if check_password_hash(user.password, password):
+        if user and check_password_hash(user.password, password):
             login_user(user)
 
             next_page = request.args.get('next')
 
-            redirect(next_page)
+            return redirect(next_page)
         else:
             flash('Login or password is not correct')
     else:
         flash('Please fill login and password fields')
-        return render_template('login.html')
+    return render_template('login.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    pass
+    login = request.form.get('login')
+    password = request.form.get('password')
+    password2 = request.form.get('password2')
+
+    if request.method == 'POST':
+        if not (login or password2 or password):
+            flash('Please, fill all fields!')
+        elif password != password2:
+            flash('Password are not equal!')
+        else:
+            hash_pwd = generate_password_hash(password)
+            new_user = User(login=login, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+
+            return redirect((url_for('login_page')))
+
+    return render_template('register.html')
 
 
 @app.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
-    pass
+    logout_user()
+    return redirect((url_for('hello_world')))
+
+
+@app.after_request
+def redirect_to_signin(response):
+    if response.status_code == 401:
+        return redirect(url_for('login_page') + '?next=' + request.url)
+    return response
